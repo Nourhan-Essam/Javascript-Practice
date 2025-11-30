@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Blank Window Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <button onclick="showMyWindow();">Open Blank Page</button>
+    <script>
+      function showMyWindow() {
+        let newWin = window.open("", "myPopUp", "width = 800, height = 600");
+        newWin.document.write("<h2>Hello, This is new Window!!<h2>");
+      }
+    </script>
+  </body>
+</html>

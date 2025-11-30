@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Window.open writing to popup window</title>
+    <style></style>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <button onclick="ShowMyWindow()">Show popup window</button>
+    <script>
+      function ShowMyWindow() {
+        let popup = window.open("", "popupDemo", "width = 400, height = 300");
+        popup.document.write(
+          "<h1>Hello!<h1><p>This is popup was created by JS.<p>"
+        );
+        popup.documnet.body.style.backgroundColor = "#FF1493";
+        popup.document.body.style.color = "#FFC0CB";
+      }
+    </script>
+  </body>
+</html>

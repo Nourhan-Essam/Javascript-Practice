@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Window.close Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <button onclick="OpenandClose()">Open and Close Window</button>
+    <script>
+      function OpenandClose() {
+        let myWin = window.open(
+          "BlankWindow.html",
+          "_blank",
+          "width = 800, height = 600"
+        );
+        setTimeout;
+        () => {
+          myWin.close();
+        },
+          5000;
+      }
+    </script>
+  </body>
+</html>
