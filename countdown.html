@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>countdown() Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <h3>Example CountDown Example</h3>
+    <p>check the log for results</p>
+    <h1 id="n">5</h1>
+    <button onclick="startCountDown();">Start Countdown</button>
+    <script>
+      function startCountDown() {
+        let timeLeft = 5;
+        let n = document.getElementById("n");
+        n.textContent = timeLeft;
+        let countdown = setInterval(() => {
+          timeLeft--;
+          n.textContent = timeLeft;
+          if (timeLeft === 0) {
+            clearInterval(countdown);
+            setTimeout(() => alert("Time's up!!!"), 500);
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
