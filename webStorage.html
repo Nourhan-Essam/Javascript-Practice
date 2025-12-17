@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Storage Demo</title>
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #f4f4f4;
+        font-family: Arial, sans-serif;
+      }
+
+      input {
+        padding: 10px;
+        width: 300px;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+      }
+
+      button {
+        padding: 12px 30px;
+        margin: 6px;
+        border: none;
+        background: #007bff;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background: #0056b3;
+        transform: scale(1.05);
+      }
+
+      #output {
+        margin-top: 20px;
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Web storage demo</h2>
+    <input id="nameInput" type="text" placeholder="Enter your name..." />
+    <button onclick="saveLS();">Save in Local Storage</button>
+    <button onclick="loadLS();">Load From Local Storage</button>
+    <button onclick="clearLS();">Clear Local Storage</button>
+    <br />
+    <button onclick="saveSS();">Save in Session Storage</button>
+    <button onclick="loadSS();">Load From Session Storage</button>
+    <button onclick="clearSS();">Clear Session Storage</button>
+    <div id="output"></div>
+    <a href="webStorage2.html" target="_self">go to Page2 in the same tab</a>
+    <br />
+    <a href="webStorage2.html" target="_blank">go to Page2 in another tab</a>
+    <script>
+      //Local Storage Functions
+      function saveLS() {
+        let name = document.getElementById("nameInput").value;
+        localStorage.setItem("name", name);
+        alert("saved in local storage");
+      }
+      function loadLS() {
+        let name = localStorage.getItem("name");
+        document.getElementById("output").textContent =
+          "Local Storage: " + (name ?? "No value Found");
+      }
+      function clearLS() {
+        localStorage.clear();
+        alert("local storage cleared");
+      }
+
+      //Session Storage Function
+      function saveSS() {
+        let name = document.getElementById("nameInput").value;
+        sessionStorage.setItem("name", name);
+        alert("saved in session storage!!");
+      }
+      function loadSS() {
+        let name = sessionStorage.getItem("name");
+        document.getElementById("output").textContent =
+          "Session Storage: " + (name ?? "Value not found.");
+      }
+      function clearSS() {
+        sessionStorage.clear();
+        alert("session storage cleared.");
+      }
+    </script>
+  </body>
+</html>
