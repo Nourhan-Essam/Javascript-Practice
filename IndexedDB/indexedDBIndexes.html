@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndexedDB with index (multiple search)</title>
+    <link rel="stylesheet" href="indexedDBIndexes.css">
+</head>
+<body>
+    <div class="card">
+        <!--Header-->
+        <div class="card-header">
+            <h2>IndexedDB using index (multiple search)</h2>
+            <div class="subtitle">
+                "Database with 20 users, indexed by <strong>name</strong> " "search returns all matched data"
+            </div>
+        </div>
+
+        <!--left panel-->
+        <div class="leftPanel">
+            <!--search box-->
+            <div class="searchBox">
+                <label for="searchName">
+                    <p>search users by name: </p>
+                </label>
+                <div class="searchRow">
+                    <input id="searchName" type="text" placeholder="e.g Ahmed,.......">
+                    <button onclick="findByName()">Search</button>
+                </div>
+                <button class="btn-secondary" style="margin-top: 8px" onclick="clearSearch()">
+            🧹 Clear Search Results
+          </button>
+            </div>
+            
+            <!--log box-->
+            <div>
+                <div id="logTitle">Log:</div>
+                <div id="log">
+                    <div class="logLine logOk"> Database opened successfully.</div>
+                    <div class="logLine logInfo"> All users rendered. Count: 20</div>
+                </div>
+        </div>
+        <!--search result table-->
+        <div>
+            <div class="table-title">
+                <p>search results (by name)</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px">ID</th>
+                        <th>Name</th>
+                        <th style="width: 70px">Age</th>
+                    </tr>
+                </thead>
+                <tbody id="searchBody"></tbody>
+            </table>
+            <div class="empty-note" id="searchEmptyNote">No search yet or no matching users.</div>
+        </div>
+    </div>
+
+    <!--right panel-->
+    <div class="right-panel">
+        <div>
+            <div class="section-header">
+                <div class="table-title">
+                    <p>All Users in Database</p>
+                </div>
+                <button style="padding: 4px 10px; font-size: 0.8rem" onclick="renderAllUsers()">
+              🔄 Refresh
+            </button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                    <th style="width: 60px">ID</th>
+                    <th>Name</th>
+                    <th style="width: 70px">Age</th>
+                    </tr>
+                </thead>
+                <tbody id="usersBody"><tr><td>1</td><td>Ahmed</td><td>25</td></tr><tr><td>2</td><td>Sara</td><td>22</td></tr><tr><td>3</td><td>Omar</td><td>30</td></tr><tr><td>4</td><td>Lina</td><td>27</td></tr><tr><td>5</td><td>Ahmed</td><td>28</td></tr><tr><td>6</td><td>Hana</td><td>24</td></tr><tr><td>7</td><td>Khaled</td><td>32</td></tr><tr><td>8</td><td>Noor</td><td>21</td></tr><tr><td>9</td><td>Yousef</td><td>29</td></tr><tr><td>10</td><td>Reem</td><td>26</td></tr><tr><td>11</td><td>Ali</td><td>23</td></tr><tr><td>12</td><td>Mona</td><td>31</td></tr><tr><td>13</td><td>Ahmed</td><td>35</td></tr><tr><td>14</td><td>Salma</td><td>20</td></tr><tr><td>15</td><td>Rami</td><td>27</td></tr><tr><td>16</td><td>Huda</td><td>24</td></tr><tr><td>17</td><td>Omar</td><td>33</td></tr><tr><td>18</td><td>Tariq</td><td>29</td></tr><tr><td>19</td><td>Nour</td><td>22</td></tr><tr><td>20</td><td>Ahmed</td><td>40</td></tr></tbody>
+            </table>
+            <div>
+                <div class="empty-note" id="allEmptyNote" style="display: none;">
+            No users found. (This should not happen if initial seeding works.)
+          </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logMessage(message, type="info")
+        {
+            const logBox = document.getElementById("log");
+
+            const line = document.createElement("div");
+            line.classList.add("logLine");
+
+            if(type === "ok") line.classList.add("logOk");
+            else if(type === "error") line.classList.add("logError");
+            else line.classList.add("logInfo");
+
+            line.textContent = message;
+            logBox.appendChild(line);
+
+            logBox.scrollTop = logBox.scrollHeight;
+            console.log(message);
+        }
+
+        let db;
+        const request = indexedDB.open("MyDB_IndexesDemo", 1);
+        request.onupgradeneeded = function(e)
+        {
+            db = e.target.result;
+            const store = db.createObjectStore("users", {keyPath: "id"});
+            store.createIndex("nameIndex", "name", {unique: false});
+            logMessage("Object store 'users' and index 'nameIndex' created.", "ok");
+            const intialUsers = [
+                {id: 1,	name: Ahmed,	age:25},
+                {id: 2,	name: Sara,	age:22},
+                {id: 4,	name: Lina,	age:27},
+                {id: 3,	name: Omar,	age:30},
+                {id: 5,	name: Ahmed,	age:28},
+                {id: 6,	name: Hana,	age:24},
+                {id: 7,	name: Khaled	,age: 32},
+                {id: 8,	name: Noor	,age: 21},
+                {id: 9,	name: Yousef	,age: 29},
+                {id: 10,name:  Reem	,age: 26},
+                {id: 11,name:  Ali	,age: 23},
+                {id: 12,name:  Mona	,age: 31},
+                {id: 13,name:  Ahmed	,age: 35},
+                {id: 14,name:  Salma	,age: 20},
+                {id: 15,name:  Rami	,age: 27},
+                {id: 16,name:  Huda	,age: 24},
+                {id: 17,name:  Omar	,age: 33},
+                {id: 18,name:  Tariq	,age: 29},
+                {id: 19,name:  Nour	,age: 22},
+                {id: 20,name:  Ahmed	,age: 40}
+            ];
+
+            //use the upgrade transaction to add intial data
+            const upgradeTx = e.target.transaction;
+            const upgradeStore = upgradeTx.objectStore("users");
+            intialUsers.forEach((user) => {
+                upgradeStore.add(user);
+            });
+            logMessage("20 intial users seeded into 'users' store.", "ok");
+        };
+
+        request.onsuccess = function(e)
+        {
+            db = e.target.result;
+            logMessage("✅ Database opened successfully.", "ok");
+            renderAllUsers();
+        };
+
+        request.onerror = function(e)
+        {
+            logMessage("Error Openening DB: " + e.target.error, "error");
+        };
+
+        function renderAllUsers()
+        {
+            const tbody = document.getElementById("usersBody");
+            const emptyNote = document.getElementById("allEmptyNote");
+            tbody.innerHTML = "";
+            const tx = db.transaction("users", "readonly");
+            const store = tx.objectStore("users");
+            const req = store.getAll();
+            req.onsuccess = () => {
+                const users = req.result;
+                if(!users || users.length === 0)
+            {
+                emptyNote.style.display = "block";
+                logMessage("No users found in store.", "info");
+                return;
+            }
+            emptyNote.style.display = "none";
+
+            users.foreach((user) => {
+                const tr = document.createElement("tr");
+                const tdId = document.createElement("td");
+                tdId.textContent = user.id;
+
+                const tdName = document.createElement("td");
+                tdName.textContent = user.name;
+
+                const tdAge = document.createElement("td");
+                tdAge.textContent = user.age;
+
+                tr.appendChild(tdId);
+                tr.appendChild(tdName);
+                tr.appendChild(tdAge);
+
+                tbody.appendChild(tr);
+            });
+
+            logMessage("📋 All users rendered. Count: " + users.length, "info");
+            };
+
+            req.onerror = () => {
+                logMessage("Error loading all users.", "error");
+            };
+        }
+
+        function clearSearch()
+        {
+            document.getElementById("searchName").value = "";
+            const tbody = document.getElementById("searchBody");
+            tbody.innerHTML = "";
+            const emptyNote = document.getElementById("searchEmptyNote");
+            emptyNote.textContent = "no search yet or no matching users.";
+            logMessage("search results cleared.", "info");
+        }
+
+        function findByName()
+        {
+            const name = document.getElementById("searchName").value.trim();
+            const tbody = document.getElementById("searchBody");
+            const emptyNote = document.getElementById("searchEmptyNote");
+            tbody.innerHTML = "";
+
+            if(name === "")
+        {
+            alert("Please enter a name to search.");
+            emptyNote.textContent = "no search yet or no matching users.";
+            return;
+        }
+        logMessage(`searching for users with name = "${name}"....`, "info");
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+        const index = store.index("nameIndex");
+        const req = index.getAll(name);
+        req.onsuccess = () => {
+            const results = req.result;
+            if(!results || results.length === 0){
+                emptyNote.textContent = `no users found with name "${name}."`;
+                logMessage(`no users found with name "${name}.`, "error");
+                return;
+            }
+            emptyNote.textContent = `Found ${results.length} user(s) with name "${name}."`;
+            results.forEach((user) => {
+                const tr = document.createElement("tr");
+                const tdId = document.createElement("td");
+                tdId.textContent = user.id;
+                const tdName = document.createElement("td");
+                tdName.textContent = user.name;
+                const tdAge = document.createElement("td");
+                tdAge.textContent = user.age;
+
+                tr.appendChild(tdId);
+                tr.appendChild(tdName);
+                tr.appendChild(tdAge);
+
+                tbody.appendChild(tr);
+            });
+            logMessage(`search complete. Found ${results.length} user(s) named "${name}".`, "ok");
+        };
+        req.onerror = () => {
+            logMessage("error while searching by name", "error");
+        };
+        }
+    </script>
+</body>
+</html>

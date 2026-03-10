@@ -1,0 +1,90 @@
+body{
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #DAA520, #DEB887);
+    font-family: "Segoe UI", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #FFD700;
+}
+
+/* card container */
+.card{
+    background: #DAA520;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    width: 420px;
+    text-align: center;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+.card h2{
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+}
+.subtitle{
+    font-size: 0.9rem;
+    color:  #F0E68C;
+    margin-bottom: 20px;
+}
+
+/* buttons layout*/
+.btn-group{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+button{
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color:#DAA520;
+    background: #FFD700;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(62, 44, 0, 0.25);
+}
+button:hover{
+    background: #FFEBCD;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.5);
+}
+button:active{
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+}
+
+/* log & status box*/
+#log{
+    text-align: left;
+    font-size: 0.9rem;
+    background: #FFFFFF;
+    color: #FFD700;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    max-height: 160px;
+    overflow-y: auto;
+}
+#log-title{
+    font-size: 0.85rem;
+    color: #DAA520;
+    margin-bottom: 4px;
+}
+.log-line{
+    margin: 2px 0;
+}
+.log-ok{
+    color: #DAA520;
+}
+.log-error{
+    color: red;
+}
+.log-info{
+    color:#DAA520;
+}

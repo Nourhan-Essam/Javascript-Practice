@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndexedDB modern Demo</title>
+    <link rel="stylesheet" href="indexedDB.css">
+</head>
+<body>
+    <div class="card">
+        <h2>IndexedDB Simple Example</h2>
+        <div class="subtitle">
+            Add, read, update, and delete a user with <strong>id = 1</strong>
+        </div>
+        <div class="btn-group">
+            <button onclick="addUser()">Add User</button>
+            <button onclick="readUser()">Read User</button>
+            <button onclick="updateUser()">Update User</button>
+            <button onclick="deleteUser()">Delete User</button>
+        </div>
+        <div id="log-title">Log:</div>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        /*log messages to the on-page log box*/
+        function logMessage(message, type = "info"){
+            const logBox = document.getElementById("log");
+            const line = document.createElement("div"); //create a new line element
+            line.classList.add("log-line");
+
+            if(type ==="ok") line.classList.add("log-ok"); //style by type
+            else if(type === "error") line.classList.add("log-error");
+            else line.classList.add("log-info");
+            line.textContent = message;
+            logBox.appendChild(line);
+
+            logBox.scrollTop = logBox.scrollHeight; //auto scroll to bottom
+            console.log(message); // also log to console for debugging
+        }
+
+        let db; //global variable will store the opened database connection 
+        /* opens database named "MyDB" with version 1
+        If DB does not exist it will be created */
+        let request = indexedDB.open("MyDB", 1);
+
+        request.onupgradeneeded = function(e)
+        {
+            //get reference to the db
+            db = e.target.result;
+
+            db.createObjectStore("users", {keyPath: "id"}); 
+            logMessage("object store 'users' created.", "ok");
+        };
+
+        request.onsuccess = function(e)
+        {
+            db = e.target.result; //save DB instance globally
+            logMessage("DataBase opened successfully", "ok");
+        };
+
+        request.onerror = function(e)
+        {
+            logMessage("Error openening DB: " + e.target.error , "error");
+        };
+
+        //ADD DATA AND CHECK IF IT EXIST
+        function addUser()
+        {
+            //open a read-write transaction on the users obbject store
+            let tx = db.transaction("users", "readwrite"); 
+            let store = tx.objectStore("users");
+            let check = store.get(1); //try reading key first
+            check.onsuccess = () => {
+                // if record found don't add duplicate
+                if(check.result !== undefined){
+                    logMessage("cannot add. user with ID = 1 already exists.", "error");
+                    alert("user already exists!");
+                }
+                else{
+                    store.add({id: 1, name: "Ali", age: 20});
+                    tx.oncomplete = () => {
+                        logMessage("user with ID = 1 added.", "ok");
+                        alert("user added!");
+                    };
+                }
+            };
+
+            //optional handle read error
+            check.onerror = () => {
+                logMessage("Error checking existing user before add.", "error");
+            };
+        }
+
+        //Read user and handles case when user doesn't exist
+        function readUser()
+        {
+            let tx = db.transaction("users", "readonly"); //open a read-only transaction
+            let store = tx.objectStore("users");
+
+            let req = store.get(1); //try to get the record with key = 1
+            req.onsuccess = () => {
+                //req.result is undefined when record doesn't exist
+                if(req.result === undefined)
+            {
+                logMessage("user with ID = 1 not found!", "error");
+                alert("user not found in database!");
+            }
+            else
+            {
+                logMessage("user found => Name: " + req.result.name + ", Age: " + req.result.age, "ok");
+                alert("user found: " + req.result.name);
+            }
+            };
+            req.onerror = () => {
+                logMessage("error reading user.", "error");
+                alert("something went wrong while reading!");
+            }
+        }
+
+        //update data only if user already exists
+        function updateUser()
+        {
+            let tx = db.transaction("users", "readwrite"); // open a read-write transaction
+            let store = tx.objectStore("users");
+            let check = store.get(1); //first check if record exists
+            
+            //when the read operation completes
+            check.onsuccess = () => {
+                //if no record found don't update 
+                if(check.result === undefined)
+            {
+                logMessage("cannot update. user with ID=1 doesn't exist.", "error");
+                alert("user not found! cannot update.");
+                return; //stop here
+            }
+            //if record exists update it
+            let updateUser = {id: 1, name: "omar", age: 21};
+            store.put(updateUser);
+            logMessage("updating user with ID=1.....", "info");
+            tx.oncomplete = () => {
+                logMessage("Transaction complete: user updated to " + updateUser.name + ", age " + updateUser.age, "ok");
+                alert("User updated!");
+            };
+            };
+            //if error happened during read
+            check.onerror = () => {
+                logMessage("Error reading the user before update.", "error");
+            };
+        }
+
+        //delete user if exists
+        function deleteUser()
+        {
+            //open a read-write transaction
+            let tx = db.transaction("users", "readwrite");
+            let store = tx.objectStore("users");
+
+            
+            let check = store.get(1); //1st check if record exists
+
+            //when the read operation succeeds
+            check.onsuccess = () => {
+                if(check.result === undefined) { //if no record
+                    logMessage("cannot delete. user with ID=1 doesn't exist.", "error");
+                    alert("user not found! nothing to delete.");
+                    return; //stop here
+                }
+                //record found proceed with deletion
+                store.delete(1);
+                logMessage("deleting user with ID=1....", "info");
+                tx.oncomplete = () => {
+                    logMessage("Transaction complete: user deleted.", "ok");
+                    alert("user deleted successfully!");
+                };
+            };
+
+            //handle potential read error
+            check.onerror = () =>{
+                logMessage("Error checking user before deletion.", "error");
+                alert("Error reading user before deletion.")
+            };
+
+        }
+        
+    </script>
+</body>
+</html>

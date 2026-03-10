@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>outerWidth and outerHeigt Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <h3>JavaScript window.outerWidth and window.outerHeight Example</h3>
+    <button onclick="Test();">Test</button>
+    <p>Check Console Log for the results (press F12)</p>
+    <script>
+      function Test() {
+        console.log("Total window width:", window.outerWidth);
+        console.log("Total window height:", window.outerHeight);
+        if (window.outerWidth < 800) {
+          alert("your browser window quite small!!");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>setTimeout and clearTimeout Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <h3>Javascript setTimeout() and clearTimeout() Example</h3>
+    <button onclick="Test();">Test Now</button>
+    <script>
+      function Test() {
+        let timeoutID = setTimeout(() => {
+          alert("Hello after 3 second!!");
+        }, 3000);
+        // clearTimeout(timeoutID); it cancels setTmeout(), so the message will never appear
+      }
+    </script>
+  </body>
+</html>

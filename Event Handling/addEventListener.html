@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>addEventListener Example</title>
+    <style>
+      /* Center page */
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Style buttons */
+      button {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        margin: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!--Btn using onclick()-->
+    <button id="btn1" onclick="showMessage();">Click 1</button>
+
+    <!--Btn using addEventListener()-->
+    <button id="btn2">Click 2</button>
+
+    <script>
+      function showMessage() {
+        alert("button clicked");
+      }
+      const btn2 = document.getElementById("btn2");
+      btn2.addEventListener("click", showMessage);
+    </script>
+  </body>
+</html>

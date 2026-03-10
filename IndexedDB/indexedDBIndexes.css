@@ -1,0 +1,183 @@
+body{
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #00008B, #008b8b);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #87CEFA;
+}
+
+/*main card container*/
+.card{
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+    background: #20B2AA;
+    padding: 30px 40px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px #4169E1;
+    width: 840px;
+    border: 1px solid #0000CD;
+}
+.card-header{
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.card-header h2{
+    margin: 0;
+    font-size: 1.8rem;
+}
+.card-header .subtitle{
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: #E0FFFF;
+}
+
+/*left panel : search + log boxes*/
+.leftPanel{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.searchBox{
+    background: #00CED1;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #E0FFFF;
+}
+.searchBox label{
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #FFC0CB;
+}
+.searchRow{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+input[type = "text"]{
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #E0FFFF;
+    background: #00CED1;
+    color: #FFC0CB;
+    font-size: 0.95rem;
+}
+input::placeholder{
+    color: #FF69B4;
+}
+input:focus{
+    border-color: #008b8b;
+    box-shadow: 0 0 1px #4169E1;
+}
+button{
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #FF69B4;
+    background: #00CED1;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px #4169E1;
+}
+button:hover{
+    background: #4169E1;
+    transform: translateY(0);
+    box-shadow: 0 4px 6px #FF69B4;
+}
+button:active{
+    transform: translateY(0);
+    box-shadow: 0 3px 8px #FF1493;
+}
+.btn-secondary{
+    background:#FF1493 ;
+    box-shadow: 0 4px 10px #FF69B4;
+}
+.btn-secondary:hover{
+    background: #DC143C;
+}
+
+/*log box*/
+#log{
+    text-align: left;
+    font-size: 0.85rem;
+    background: #FF69B4;
+    border-radius: 10px;
+    padding: 8px 10px;
+    border: 1px solid #DC143C;
+    max-height: 150px;
+    overflow-y: auto;
+    color: #FF69B4;
+}
+#logTitle{
+    font-size: 0.8rem;
+    color: #FF69B4;
+    margin-bottom: 4px;
+}
+.logLine{
+    margin: 2px 0;
+}
+.logOk{
+    color: green;
+}
+.logError{
+    color: red;
+}
+.logInfo{
+    color: yellow;
+}
+
+/*right panel: users table + search result table*/
+.right-panel{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.table-title{
+    font-size: 0.9rem;
+    color: yellow;
+}
+.section-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background: #DC143C;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid blue;
+}
+thead{
+    background: #00008B;
+}
+th, td{
+    padding: 8px 10px;
+    border-bottom: 1px solid pink;
+    text-align: left;
+}
+th{
+    font-weight: 600;
+    color: brown;
+}
+tbody tr:nth-child(even){
+    background: green;
+}
+tbody tr:nth-child(odd){
+    background: violet;
+}
+.empty-note{
+    font-size: 0.8rem;
+    color: white;
+    margin-top: 4px;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Storage auto-save</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #f4f4f4;
+        font-family: Arial, sans-serif;
+      }
+
+      textarea {
+        width: 400px;
+        height: 180px;
+        padding: 12px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        border: 1px solid #aaa;
+        resize: none;
+      }
+
+      h2 {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>No Save</h2>
+    <!--text area where user types-->
+    <textarea id="textBox1" placeholder="Type something...."></textarea>
+    <h2>Auto Save(session storage)</h2>
+    <textarea id="textBox2" placeholder="Type something...."></textarea>
+    <script>
+      const savedText = sessionStorage.getItem("draftText");
+      if (savedText !== null) {
+        document.getElementById("textBox2").value = savedText;
+      }
+      //auto save
+      const textBox2 = document.getElementById("textBox2");
+      textBox2.addEventListener("input", function () {
+        const currentText = this.value;
+        sessionStorage.setItem("draftText", currentText);
+      });
+    </script>
+  </body>
+</html>

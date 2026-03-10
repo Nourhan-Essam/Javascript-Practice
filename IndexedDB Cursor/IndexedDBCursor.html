@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="IndexedDBCursor.css"> 
+</head>
+<body>
+    <div class="container">
+      <!-- ===========================
+           HEADER
+      ============================ -->
+      <div class="header">
+        <h1>IndexedDB – Cursor Searching Demo</h1>
+        <p>
+          Demonstration of
+          <strong>cursors, indexes, and range searching</strong>
+          in IndexedDB (All operations happen in the browser).
+        </p>
+      </div>
+
+      <!-- ===========================
+           LEFT PANEL
+      ============================ -->
+      <div class="left-panel">
+        <!-- Search by name (index + cursor) -->
+        <div class="card-section">
+          <div class="section-title">🔍 Search by Name (Index + Cursor)</div>
+          <label for="searchName">
+            Search users by <strong>name</strong> (case-sensitive):
+          </label>
+          <div class="input-row">
+            <input id="searchName" type="text" placeholder="e.g. &quot;Ahmed&quot;, &quot;Omar&quot;...">
+            <button onclick="searchByName()">Search</button>
+          </div>
+          <div class="small-note">
+            Uses <code>nameIndex</code> and <code>index.openCursor()</code> to
+            find <strong>all</strong> users with this exact name.
+          </div>
+        </div>
+
+        <!-- Search by age > X (store + cursor) -->
+        <div class="card-section">
+          <div class="section-title">📈 Filter by Age (Age &gt; X)</div>
+          <label for="minAge">Show users where age is greater than:</label>
+          <div class="input-row">
+            <input id="minAge" type="number" placeholder="e.g. 25" min="0">
+            <button onclick="filterByAge()">Filter</button>
+          </div>
+          <div class="small-note">
+            Uses a cursor on the <code>users</code> store and checks
+            <code>cursor.value.age &gt; X</code>.
+          </div>
+        </div>
+
+        <!-- Range search (ID from... to...) -->
+        <div class="card-section">
+          <div class="section-title">
+            🎯 Range Search by ID (Using IDBKeyRange.bound)
+          </div>
+          <label>Search users whose ID is between:</label>
+          <div class="input-row">
+            <input id="minId" type="number" placeholder="Min ID (e.g. 3)" min="1">
+            <input id="maxId" type="number" placeholder="Max ID (e.g. 10)" min="1">
+          </div>
+          <div class="input-row" style="margin-top: 6px">
+            <button onclick="searchByIdRange()">Search Range</button>
+          </div>
+          <div class="small-note">
+            Uses <code>IDBKeyRange.bound(min, max)</code> +
+            <code>openCursor(range)</code>.
+          </div>
+        </div>
+
+        <!-- Log -->
+        <div class="card-section">
+          <div class="section-title">🧾 Log</div>
+          <div id="log"><div class="log-line log-ok">✅ Database opened successfully.</div><div class="log-line log-info">📋 All users rendered. Count: 20</div></div>
+        </div>
+
+        <!-- Search results table -->
+        <div class="card-section">
+          <div class="section-header-inline">
+            <div class="table-title"><p>🔎 Search / Filter Results</p></div>
+            <!-- NEW: Clear Results Button -->
+            <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.78rem" onclick="clearResults()">
+              🧹 Clear
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 55px">ID</th>
+                <th>Name</th>
+                <th style="width: 70px">Age</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+          <div id="resultsEmpty" class="empty-note">
+            No search yet or no matching records.
+          </div>
+        </div>
+      </div>
+
+      <!-- ===========================
+           RIGHT PANEL
+      ============================ -->
+      <div class="right-panel">
+        <!-- All users table -->
+        <div class="card-section">
+          <div class="section-header-inline">
+            <div class="table-title">
+              <p>📋 All Users (Loaded via Cursor)</p>
+            </div>
+            <button style="padding: 5px 10px; font-size: 0.78rem" class="btn-secondary" onclick="renderAllUsers()">
+              🔄 Refresh
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 55px">ID</th>
+                <th>Name</th>
+                <th style="width: 70px">Age</th>
+              </tr>
+            </thead>
+            <tbody id="allUsersBody"><tr><td>1</td><td>Ahmed</td><td>25</td></tr><tr><td>2</td><td>Sara</td><td>22</td></tr><tr><td>3</td><td>Omar</td><td>30</td></tr><tr><td>4</td><td>Lina</td><td>27</td></tr><tr><td>5</td><td>Ahmed</td><td>35</td></tr><tr><td>6</td><td>Hana</td><td>24</td></tr><tr><td>7</td><td>Khaled</td><td>32</td></tr><tr><td>8</td><td>Noor</td><td>21</td></tr><tr><td>9</td><td>Yousef</td><td>29</td></tr><tr><td>10</td><td>Reem</td><td>26</td></tr><tr><td>11</td><td>Ali</td><td>23</td></tr><tr><td>12</td><td>Mona</td><td>31</td></tr><tr><td>13</td><td>Ahmed</td><td>40</td></tr><tr><td>14</td><td>Salma</td><td>20</td></tr><tr><td>15</td><td>Rami</td><td>27</td></tr><tr><td>16</td><td>Huda</td><td>24</td></tr><tr><td>17</td><td>Omar</td><td>33</td></tr><tr><td>18</td><td>Tariq</td><td>29</td></tr><tr><td>19</td><td>Nour</td><td>22</td></tr><tr><td>20</td><td>Ahmed</td><td>28</td></tr></tbody>
+          </table>
+          <div id="allUsersEmpty" class="empty-note">Total users: 20</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ==========================================================
+         Utility: Log messages to on-page log box
+      ========================================================== */
+      function logMessage(message, type = "info") {
+        const logBox = document.getElementById("log");
+
+        // Create a new line for each message
+        const line = document.createElement("div");
+        line.classList.add("log-line");
+
+        // Add color class depending on type
+        if (type === "ok") line.classList.add("log-ok");
+        else if (type === "error") line.classList.add("log-error");
+        else line.classList.add("log-info");
+
+        // Set the message text
+        line.textContent = message;
+
+        // Add line to log box
+        logBox.appendChild(line);
+
+        // Auto-scroll to bottom
+        logBox.scrollTop = logBox.scrollHeight;
+
+        // Also print to console for debugging
+        console.log(message);
+      }
+
+      /* ==========================================================
+         Global DB variable
+      ========================================================== */
+      let db;
+
+      /* ==========================================================
+         Open (or create) IndexedDB database
+         - Name: "CursorDemoDB"
+         - Version: 1
+      ========================================================== */
+      const openRequest = indexedDB.open("CursorDemoDB", 1);
+
+      /* ==========================================================
+         onupgradeneeded
+         - Runs when DB is created or version increases
+         - Here we:
+           1) Create "users" store
+           2) Create indexes
+           3) Seed initial data
+      ========================================================== */
+      openRequest.onupgradeneeded = function (event) {
+        // Get database instance
+        db = event.target.result;
+
+        // Create object store with keyPath "id"
+        const store = db.createObjectStore("users", { keyPath: "id" });
+
+        // Create index by name (not unique → multiple same names allowed)
+        store.createIndex("nameIndex", "name", { unique: false });
+
+        // Create index by age (not unique as well)
+        store.createIndex("ageIndex", "age", { unique: false });
+
+        logMessage("Object store 'users' and indexes created.", "ok");
+
+        // Prepare some sample user data
+        const initialUsers = [
+          { id: 1, name: "Ahmed", age: 25 },
+          { id: 2, name: "Sara", age: 22 },
+          { id: 3, name: "Omar", age: 30 },
+          { id: 4, name: "Lina", age: 27 },
+          { id: 5, name: "Ahmed", age: 35 },
+          { id: 6, name: "Hana", age: 24 },
+          { id: 7, name: "Khaled", age: 32 },
+          { id: 8, name: "Noor", age: 21 },
+          { id: 9, name: "Yousef", age: 29 },
+          { id: 10, name: "Reem", age: 26 },
+          { id: 11, name: "Ali", age: 23 },
+          { id: 12, name: "Mona", age: 31 },
+          { id: 13, name: "Ahmed", age: 40 },
+          { id: 14, name: "Salma", age: 20 },
+          { id: 15, name: "Rami", age: 27 },
+          { id: 16, name: "Huda", age: 24 },
+          { id: 17, name: "Omar", age: 33 },
+          { id: 18, name: "Tariq", age: 29 },
+          { id: 19, name: "Nour", age: 22 },
+          { id: 20, name: "Ahmed", age: 28 },
+        ];
+
+        // Use the upgrade transaction to seed initial data
+        const upgradeTx = event.target.transaction;
+        const upgradeStore = upgradeTx.objectStore("users");
+
+        initialUsers.forEach((user) => {
+          upgradeStore.add(user);
+        });
+
+        logMessage("20 initial users seeded into 'users' store.", "ok");
+      };
+
+      /* ==========================================================
+         onsuccess
+         - Database successfully opened → save reference and render all
+      ========================================================== */
+      openRequest.onsuccess = function (event) {
+        db = event.target.result;
+        logMessage("✅ Database opened successfully.", "ok");
+
+        // Load all users into the "All Users" table using a cursor
+        renderAllUsers();
+      };
+
+      /* ==========================================================
+         onerror
+      ========================================================== */
+      openRequest.onerror = function (event) {
+        logMessage("❌ Error opening database: " + event.target.error, "error");
+      };
+
+      /* ==========================================================
+         Helper: Clear search results table
+      ========================================================== */
+      function clearResults(message = "No search yet or no matching records.") {
+        const tbody = document.getElementById("resultsBody");
+        tbody.innerHTML = "";
+
+        const emptyNote = document.getElementById("resultsEmpty");
+        emptyNote.textContent = message;
+      }
+
+      /* ==========================================================
+         Render all users using a cursor on the object store
+      ========================================================== */
+      function renderAllUsers() {
+        const tbody = document.getElementById("allUsersBody");
+        const emptyNote = document.getElementById("allUsersEmpty");
+
+        // Clear previous content
+        tbody.innerHTML = "";
+        emptyNote.textContent = "Loading data...";
+
+        // Open a read-only transaction on "users"
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+
+        // Open a cursor to iterate over all records
+        const request = store.openCursor();
+        let count = 0;
+
+        request.onsuccess = function (event) {
+          // Get the cursor from the event result
+          const cursor = event.target.result;
+
+          // If cursor is valid → process current record
+          if (cursor) {
+            const user = cursor.value;
+
+            // Create table row
+            const tr = document.createElement("tr");
+
+            const tdId = document.createElement("td");
+            tdId.textContent = user.id;
+
+            const tdName = document.createElement("td");
+            tdName.textContent = user.name;
+
+            const tdAge = document.createElement("td");
+            tdAge.textContent = user.age;
+
+            tr.appendChild(tdId);
+            tr.appendChild(tdName);
+            tr.appendChild(tdAge);
+
+            tbody.appendChild(tr);
+
+            count++;
+
+            // Move cursor to the next record
+            cursor.continue();
+          } else {
+            // No more records
+            if (count === 0) {
+              emptyNote.textContent = "No users found in database.";
+            } else {
+              emptyNote.textContent = `Total users: ${count}`;
+            }
+            logMessage(`📋 All users rendered. Count: ${count}`, "info");
+          }
+        };
+
+        request.onerror = function () {
+          logMessage("❌ Error iterating users with cursor.", "error");
+          emptyNote.textContent = "Error loading users.";
+        };
+      }
+
+      /* ==========================================================
+         Search by NAME using an index + cursor
+         - Case-sensitive exact match
+      ========================================================== */
+      function searchByName() {
+        const nameInput = document.getElementById("searchName");
+        const name = nameInput.value.trim();
+
+        // Clear any old results
+        clearResults();
+
+        if (name === "") {
+          alert("Please enter a name to search.");
+          return;
+        }
+
+        logMessage(
+          `🔍 Searching for users with name = "${name}" using cursor on index...`,
+          "info"
+        );
+
+        const tbody = document.getElementById("resultsBody");
+        const emptyNote = document.getElementById("resultsEmpty");
+
+        // Open read-only transaction
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+
+        // Get the index on "name"
+        const index = store.index("nameIndex");
+
+        // Open a cursor over the entire index (no key range here)
+        const request = index.openCursor();
+        let matches = 0;
+
+        request.onsuccess = function (event) {
+          const cursor = event.target.result;
+
+          if (cursor) {
+            // cursor.key is the indexed field (name)
+            if (cursor.key === name) {
+              const user = cursor.value;
+
+              const tr = document.createElement("tr");
+
+              const tdId = document.createElement("td");
+              tdId.textContent = user.id;
+
+              const tdName = document.createElement("td");
+              tdName.textContent = user.name;
+
+              const tdAge = document.createElement("td");
+              tdAge.textContent = user.age;
+
+              tr.appendChild(tdId);
+              tr.appendChild(tdName);
+              tr.appendChild(tdAge);
+
+              tbody.appendChild(tr);
+              matches++;
+            }
+
+            // Move cursor forward
+            cursor.continue();
+          } else {
+            // Cursor finished scanning
+            if (matches === 0) {
+              emptyNote.textContent = `No users found with name "${name}".`;
+              logMessage(`❌ No users found with name "${name}".`, "error");
+            } else {
+              emptyNote.textContent = `Found ${matches} user(s) named "${name}".`;
+              logMessage(
+                `✅ Search complete. Found ${matches} user(s) named "${name}".`,
+                "ok"
+              );
+            }
+          }
+        };
+
+        request.onerror = function () {
+          logMessage("❌ Error while searching by name using cursor.", "error");
+        };
+      }
+
+      /* ==========================================================
+         Filter by age: show users with age > X using cursor
+      ========================================================== */
+      function filterByAge() {
+        const minAgeInput = document.getElementById("minAge");
+        const minAgeValue = minAgeInput.value.trim();
+
+        // Clear previous results
+        clearResults();
+
+        if (minAgeValue === "") {
+          alert("Please enter a minimum age.");
+          return;
+        }
+
+        const minAge = Number(minAgeValue);
+
+        if (Number.isNaN(minAge)) {
+          alert("Please enter a valid number for age.");
+          return;
+        }
+
+        logMessage(
+          `📈 Filtering users with age > ${minAge} using cursor on store...`,
+          "info"
+        );
+
+        const tbody = document.getElementById("resultsBody");
+        const emptyNote = document.getElementById("resultsEmpty");
+
+        // Open read-only transaction
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+
+        // Open cursor over all records in the store
+        const request = store.openCursor();
+        let count = 0;
+
+        request.onsuccess = function (event) {
+          const cursor = event.target.result;
+
+          if (cursor) {
+            const user = cursor.value;
+
+            // Apply condition: age > minAge
+            if (user.age > minAge) {
+              const tr = document.createElement("tr");
+
+              const tdId = document.createElement("td");
+              tdId.textContent = user.id;
+
+              const tdName = document.createElement("td");
+              tdName.textContent = user.name;
+
+              const tdAge = document.createElement("td");
+              tdAge.textContent = user.age;
+
+              tr.appendChild(tdId);
+              tr.appendChild(tdName);
+              tr.appendChild(tdAge);
+
+              tbody.appendChild(tr);
+              count++;
+            }
+
+            // Move to next record
+            cursor.continue();
+          } else {
+            // Done scanning
+            if (count === 0) {
+              emptyNote.textContent = `No users with age > ${minAge}.`;
+              logMessage(`❌ No users found with age > ${minAge}.`, "error");
+            } else {
+              emptyNote.textContent = `Found ${count} user(s) with age > ${minAge}.`;
+              logMessage(
+                `✅ Filter complete. Found ${count} user(s) with age > ${minAge}.`,
+                "ok"
+              );
+            }
+          }
+        };
+
+        request.onerror = function () {
+          logMessage(
+            "❌ Error while filtering users by age using cursor.",
+            "error"
+          );
+        };
+      }
+
+      /* ==========================================================
+         Range search by ID using IDBKeyRange.bound + cursor
+      ========================================================== */
+      function searchByIdRange() {
+        const minIdInput = document.getElementById("minId");
+        const maxIdInput = document.getElementById("maxId");
+
+        const minIdValue = minIdInput.value.trim();
+        const maxIdValue = maxIdInput.value.trim();
+
+        // Clear previous results
+        clearResults();
+
+        if (minIdValue === "" || maxIdValue === "") {
+          alert("Please enter both Min ID and Max ID.");
+          return;
+        }
+
+        const minId = Number(minIdValue);
+        const maxId = Number(maxIdValue);
+
+        if (Number.isNaN(minId) || Number.isNaN(maxId)) {
+          alert("Please enter valid numbers for ID range.");
+          return;
+        }
+
+        if (minId > maxId) {
+          alert("Min ID cannot be greater than Max ID.");
+          return;
+        }
+
+        logMessage(
+          `🎯 Searching users with ID between ${minId} and ${maxId} (inclusive)...`,
+          "info"
+        );
+
+        const tbody = document.getElementById("resultsBody");
+        const emptyNote = document.getElementById("resultsEmpty");
+
+        // Create IDBKeyRange for the given ID range
+        const range = IDBKeyRange.bound(minId, maxId);
+
+        // Open readonly transaction and cursor using the range
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+
+        const request = store.openCursor(range);
+        let count = 0;
+
+        request.onsuccess = function (event) {
+          const cursor = event.target.result;
+
+          if (cursor) {
+            const user = cursor.value;
+
+            const tr = document.createElement("tr");
+
+            const tdId = document.createElement("td");
+            tdId.textContent = user.id;
+
+            const tdName = document.createElement("td");
+            tdName.textContent = user.name;
+
+            const tdAge = document.createElement("td");
+            tdAge.textContent = user.age;
+
+            tr.appendChild(tdId);
+            tr.appendChild(tdName);
+            tr.appendChild(tdAge);
+
+            tbody.appendChild(tr);
+            count++;
+
+            cursor.continue();
+          } else {
+            // Finished scanning range
+            if (count === 0) {
+              emptyNote.textContent = `No users found with ID between ${minId} and ${maxId}.`;
+              logMessage(
+                `❌ No users found with ID between ${minId} and ${maxId}.`,
+                "error"
+              );
+            } else {
+              emptyNote.textContent = `Found ${count} user(s) with ID between ${minId} and ${maxId}.`;
+              logMessage(
+                `✅ Range search complete. Found ${count} user(s).`,
+                "ok"
+              );
+            }
+          }
+        };
+
+        request.onerror = function () {
+          logMessage(
+            "❌ Error while searching ID range using cursor.",
+            "error"
+          );
+        };
+      }
+    </script>
+  
+
+</body>
+</html>

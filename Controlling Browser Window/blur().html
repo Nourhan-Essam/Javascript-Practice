@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Window.Open blur() Example</title>
+  </head>
+  <body>
+    <h2>Test Page</h2>
+    <button onclick="showMyWindow();">Show my window</button>
+    <script>
+      function showMyWindow() {
+        let popup = window.open(
+          "info.html",
+          "infoWin",
+          "width=400, height=300"
+        );
+        setTimeout(() => {
+          popup.blur();
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

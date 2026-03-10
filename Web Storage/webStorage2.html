@@ -1,0 +1,103 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Web Storage Demo Page 2</title>
+
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #064E3B;
+        font-family: Arial, sans-serif;
+        color: #ECFDF5;
+      }
+
+      input {
+        padding: 10px;
+        width: 300px;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        background-color: transparent;
+        border: 1px solid rgba(99, 102, 241, 0.2)
+      }
+      input:focus{
+        border-color: rgba(99, 102, 241, 0.8);
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+        background-color: rgba(99, 102, 241, 0.05);
+      }
+
+      button {
+        padding: 12px 30px;
+        margin: 6px;
+        border: none;
+        background: #10B981;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background: #34D399;
+        transform: scale(1.05);
+      }
+
+      #output {
+        margin-top: 20px;
+        font-size: 1.2rem;
+      }
+      a{
+        color: #ECFDF5;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <h2>Web Storage Demo</h2>
+
+    <p style="font-size: 14; font-weight: 900">Local Storage Sotrage</p>
+
+    <button onclick="loadLS()">Load from Local Storage</button>
+
+    <br>
+
+    <p style="font-size: 14; font-weight: 900">Session Sotrage</p>
+
+    <button onclick="loadSS()">Load from Session Storage</button>
+
+    <div id="output"></div>
+
+    <script>
+      // ---------------------------------------------------------
+      // LOCAL STORAGE FUNCTIONS
+      // ---------------------------------------------------------
+
+      // Load data from Local Storage
+      function loadLS() {
+        // Retrieve the value stored under "name"
+        let name = localStorage.getItem("name");
+
+        // Show it in the output area
+        // (If no value found, show 'No value found')
+        document.getElementById("output").textContent =
+          "Local Storage: " + (name ?? "No value found");
+      }
+
+      // Load data from Session Storage
+      function loadSS() {
+        // Get item from sessionStorage
+        let name = sessionStorage.getItem("name");
+
+        // Display in output box
+        document.getElementById("output").textContent =
+          "Session Storage: " + (name ?? "No value found");
+      }
+    </script>
+  
+
+</body></html>
