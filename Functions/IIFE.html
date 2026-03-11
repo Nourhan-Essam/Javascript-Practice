@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIFE Demo</title>
+</head>
+<body>
+    <script>
+        //Ex:1
+    //     (function(){
+    //         console.log("App Loaded!!");
+    //     }
+    // ) ();
+
+    //Ex:2
+//     (function(num){
+//         console.log(num * 2);
+//     }
+// )(5);
+
+//Ex:3
+// let counter = (function(){
+//     let count = 0;
+
+//     return function()
+//     {
+//         count++;
+//         console.log("Counter: ", count);
+//     };
+// })();
+// counter();
+// counter();
+// counter();
+// counter();
+// counter();
+// counter();
+
+//Ex:4
+// const user = {
+//     name : "Omar",
+//     greet(prefix)
+//     {
+//         console.log(prefix + " " + this.name);
+//     }
+// };
+// const sayHello = user.greet;
+// sayHello.call(user, "Hello");
+// sayHello.apply(user, ["Hi!!"]);
+// const boundGreet = sayHello.bind(user);
+// boundGreet("Welcome");
+    </script>
+</body>
+</html>
