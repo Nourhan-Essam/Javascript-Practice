@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<script>
+    const original = {
+  user: "Ali",
+  prefs: {
+    theme: "dark"
+  }
+};
+
+// Shallow copy
+const shallow = { ...original };
+shallow.prefs.theme = "light";
+
+console.log(original.prefs.theme); // "light" ❌
+
+// Deep copy
+const deep = structuredClone(original);
+deep.prefs.theme = "blue";
+
+console.log(original.prefs.theme); // "light" ✅
+</script>
+
+</body>
+</html>

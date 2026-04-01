@@ -1,4 +1,4 @@
-//Ex:1
+
 // let key = "price";
 // let car = {
 //     brand:"BMW",
@@ -7,16 +7,16 @@
 //     "engine Size": "3.0",
 //     [key]: 2000000
 
-//Ex:2
+
 // }
-// // console.log(car.model);
-// // console.log(car["model"]);
+// console.log(car.model);
+// console.log(car["model"]);
 // car.color = "black";
 // console.log(car.color);
 // console.log(car["engine Size"]);
 // console.log(car.price);
 
-//Ex:3
+
 // const person = {
 //     name : "Ammar",
 //     job: "Pilot",
@@ -28,7 +28,7 @@
 // console.log(person.address.country);
 // person.greet();
 
-//Ex:4
+
 // const student = {
 //     name: "Ali",
 //     grade : 99,
@@ -38,10 +38,10 @@
 // }
 // student.showInfo();
 
-//Ex:5
-// const obj = Object.create(null);
-// obj.name = "Omar";
-// console.log("name" in obj);
-// console.log(Object.hasOwn(obj, "name"));
-// console.log(Object.hasOwn(obj, "toString"));
-// obj.hasOwnProperty("name");
+
+const obj = Object.create(null);
+obj.name = "Omar";
+console.log("name" in obj);
+console.log(Object.hasOwn(obj, "name"));
+console.log(Object.hasOwn(obj, "toString"));
+obj.hasOwnProperty("name");
