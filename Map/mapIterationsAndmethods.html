@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Iterations & Methods</title>
+</head>
+<body>
+    <script>
+        const students = new Map();
+        students.set("Ali", 90);
+        students.set("Sara", 95);
+        students.set("Omar", 88);
+        console.log(students.get("Sara")); //Task 1
+        console.log(students.has("Ali")); //Task 2
+        students.delete("Omar");         //Task 3
+        console.log(students.size);     //Task 3
+        students.forEach((score, name) => {
+            console.log(name, "scored", score);
+        })                             //Task 4
+
+        for(let [name, score] of students)
+        {
+            console.log(name, "=> ", score); //Task 5
+        }
+    </script>
+</body>
+</html>
