@@ -1,16 +1,16 @@
 class Vehicle{
     move(){
-        console.log("Vehicle is moving.");
+        return "Vehicle is moving.";
     }
 }
 class Car extends Vehicle{
     drive(){
-        console.log("Car is moving.");
+        return "Car is moving.";
     }
 }
 class Bike extends Vehicle{
     move(){
-        console.log("Bike is moving.");
+        return "Bike is moving.";
     }
 }
 const car = new Car();
