@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise Combinators</title>
+</head>
+<body>
+    <h2>Open Console to See the result</h2>
+    <script>
+        //Products request (Success after 1s)
+        const fetchProducts = new Promise ((resolve) => {
+            setTimeout(() => resolve(["Supplements", "Equipments"]), 1000);
+        });
+
+        //Ads request (Failed after 1.5s)
+        const fetchAds = new Promise((resolve, reject) => {
+            setTimeout(() => reject("Error: Advertising server crashed!"), 1500);
+        });
+
+        //Request from a very fast fallback server (Success after 0.5s)
+        const fetchFastBackup = new Promise((resolve) => {
+            setTimeout(() => resolve("Quick data from the backup server."), 500);
+        });
+
+        Promise.all([fetchProducts, fetchAds])
+        //❌ Promise.all Failed. Error: Advertising server crashed!
+        .then(results => {
+            console.log("🟢 Promise.all resolved successfully", results);
+        })
+        .catch(error => {
+            console.log("❌ Promise.all Failed.", error);
+        })
+
+        Promise.allSettled([fetchAds, fetchProducts])
+        .then(report => {
+            console.log("📊 Final Report: ", report);
+            /*📊 Final Report:   
+0: {status: 'rejected', reason: 'Error: Advertising server crashed!'}
+1: {status: 'fulfilled', value: Array(2)}
+*/
+        })
+
+        Promise.race([fetchProducts, fetchAds, fetchFastBackup])
+        //🏎️ The fastest one arrived and won the race is:  Quick data from the backup server.
+        .then(winner => {
+            console.log("🏎️ The fastest one arrived and won the race is: ", winner);
+        })
+        .catch(error => {
+            console.log("❌ The quickest promise to settle and win the race is", error);
+        })
+
+        Promise.any([fetchProducts, fetchAds, fetchFastBackup])
+    //🎖️ First resolved promise is: Quick data from the backup server.
+        .then(firstSuccess => {
+            console.log ("🎖️ First resolved promise is:", firstSuccess);
+        })
+        .catch(error => {
+            console.log("❌ failed with AggregateError (All promises rejected)", aggregateError.errors);
+        }) 
+        
+    </script>
+</body>
+</html>
