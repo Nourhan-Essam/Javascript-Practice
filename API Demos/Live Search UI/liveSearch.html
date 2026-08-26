@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Search UI with Async Requests, Debounce, and Cancellation</title>
+    <link rel="stylesheet" href="liveSearch.css">
+</head>
+<body>
+     <div class="app">
+      <div class="card">
+        <h2>Live User Search</h2>
+        <p>
+          Type a name to search users. Try letter L , or le  Requests are debounced and cancelled
+          correctly.
+        </p>
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search users by name..."
+          autocomplete="off"
+        />
+
+        <div class="status" id="status">Idle</div>
+
+        <div class="grid" id="results"></div>
+      </div>
+    </div>
+
+    <script src="liveSearch.js"></script>
+</body>
+</html>

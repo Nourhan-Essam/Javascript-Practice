@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async Data Loader</title>
+   <link href="asyncDataLoader.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+      <div class="card">
+        <!--──────────────────────────────────────────────
+      │ Code Overview
+      │ Purpose        → Fetch real data with async/await + handle errors + retry
+      │ Layout         → Single HTML file (UI + JS)
+      │ Use Cases      → API call patterns, loading state, try/catch, retry UX
+      │ Key Properties → fetch(), async/await, try/catch, finally
+      └──────────────────────────────────────────────-->
+        <h2 style="margin: 0 0 8px">Async Data Loader</h2>
+        <p class="muted" style="margin: 0 0 14px">
+          Loads users from a public API. Shows loading, errors, and retry.
+        </p>
+
+        <div class="row">
+          <button id="btnLoad">Load Users</button>
+          <button id="btnRetry" class="secondary" disabled>Retry</button>
+          <span class="muted" id="meta"></span>
+        </div>
+
+        <div class="status" id="status" style="display: none">
+          <div class="spinner"></div>
+          <div>Loading…</div>
+        </div>
+
+        <div
+          id="error"
+          class="muted"
+          style="margin-top: 12px; display: none"
+        ></div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="main.js"></script>
+</body>
+</html>

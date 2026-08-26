@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeout Fetch with Promise.race()</title>
+    <link rel="stylesheet" href="timeoutFetch.css">
+</head>
+<body>
+    <div class="app">
+      <div class="card">
+         <h2 style="margin: 0 0 8px">Timeout Fetch (Promise.race)</h2>
+        <p class="muted" style="margin: 0 0 14px">
+          Fetches a post. If it takes too long, we timeout.
+        </p>
+
+        <div class="row">
+          <button id="btn">Fetch Post</button>
+          <label class="muted">Timeout (ms)</label>
+          <input
+            id="ms"
+            type="number"
+            value="50"
+            min="50"
+            step="50"
+            style="width: 120px"
+          />
+        </div>
+
+        <pre id="out" class="muted">Click “Fetch Post”.</pre>
+      </div>
+    </div>
+    <script src="timeoutFetch.js"></script>
+</body>
+</html>
